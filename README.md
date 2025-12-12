@@ -1,4 +1,4 @@
-# Project Stream: End-to-End Data Engineering Pipeline
+# Project Stream
 
 This repository contains a real data engineering project built with **Snowflake + Python**, demonstrating a complete pipeline from raw data ingestion to analytics and data quality verification.
 
