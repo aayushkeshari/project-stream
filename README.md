@@ -4,7 +4,13 @@ This repository contains a real data engineering project built with **Snowflake 
 
 ---
 
-## 🚀 Project Overview
+## 👾 Author
+
+Aayush Keshari
+
+---
+
+## 🚀 Overview
 
 This pipeline ingests a real dataset of Netflix titles, loads it into Snowflake, performs cleaning and transformation, and builds analytics tables. It also includes automated data quality checks to ensure correctness and integrity at each stage.
 
