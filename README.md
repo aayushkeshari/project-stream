@@ -1,1 +1,1 @@
-# streaming-project
+# Project Stream
