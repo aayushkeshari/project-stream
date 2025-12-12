@@ -81,33 +81,42 @@ Run this from a directory such as `~/Documents`:
 ```bash
 git clone https://github.com/aayushkeshari/project-stream.git
 cd project-stream
+```
 
 ### 2) Create and activate a virtual environment
 
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
+```
 (You should see (.venv) in your terminal prompt.)
 
 ### 3) Install dependencies
+```bash
 pip install -r requirements.txt
+```
 
 Sanity check:
+```bash
 python -c "from dotenv import load_dotenv; print('dotenv OK')"
+```
 
 ### 4) Configure Snowflake credentials
 
 Copy the template and fill in your credentials:
 
+```bash
 cp .env.example .env
-
+```
 Edit .env:
-
+```bash
 SNOWFLAKE_ACCOUNT=<account_locator.region>   # e.g. mhc83493.us-east-1
 SNOWFLAKE_USER=<your_username>
 SNOWFLAKE_PASSWORD=<your_password>
 SNOWFLAKE_ROLE=ACCOUNTADMIN
 SNOWFLAKE_WAREHOUSE=DE_WH
 SNOWFLAKE_DATABASE=NETFLIX_DE
+```
 
 ### 5) One-time Snowflake setup (SQL)
 
@@ -131,23 +140,31 @@ CREATE OR REPLACE FILE FORMAT NETFLIX_DE.RAW.CSV_FF
 
 CREATE OR REPLACE STAGE NETFLIX_DE.RAW.NETFLIX_STAGE
   FILE_FORMAT = NETFLIX_DE.RAW.CSV_FF;
+```
 
 ### 6) Download the dataset
 
+```bash
 python ingestion/download_dataset.py
+```
 
 ### 7) Run the pipeline (load + transforms)
 
+```bash
 python ingestion/load_to_snowflake.py
+```
 
 Expected output:
-
+```bash
 RAW rowcount: 8807
 TITLES_CLEAN rowcount: 8807
+```
 
 ### 8) Run data quality checks
-python quality_checks/run_checks.py
 
+```bash
+python quality_checks/run_checks.py
+```
 
 Expected ending:
 
