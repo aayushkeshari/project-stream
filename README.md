@@ -195,4 +195,16 @@ FROM NETFLIX_DE.ANALYTICS.TITLE_COUNTRIES
 GROUP BY 1
 ORDER BY titles DESC
 LIMIT 10;
+```
+---
 
+## 📊 Example Results
+
+Below is an example output from the analytics layer, showing the **top countries by number of Netflix titles**, generated from the normalized `TITLE_COUNTRIES` bridge table.
+
+![Top Countries by Number of Titles](docs/top_countries.png)
+
+This result demonstrates:
+- Successful normalization of multi-valued country fields
+- Correct aggregation across titles
+- Clean, analytics-ready Snowflake tables
