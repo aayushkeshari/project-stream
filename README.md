@@ -24,10 +24,15 @@ Snowflake Internal Stage
 RAW Table (Netflixed Titles)
 ↓ (SQL transforms)
 Analytics Tables
+
 ├── TITLES_CLEAN
+
 ├── TITLE_GENRES
+
 ├── TITLE_COUNTRIES
+
 └── YEARLY_COUNTS
+
 ↓ (Quality checks)
 Automated Data Validations
 
