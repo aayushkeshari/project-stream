@@ -43,21 +43,115 @@ Automated Data Validations
 ### 📥 Data Ingestion
 - Downloads a real Netflix titles dataset.
 - Stores it locally under `data/raw/`.
+- Designed to be re-runnable without duplicating data.
 
 ### 📤 Loading to Snowflake
-- Uses Snowflake internal staging and `COPY INTO` for efficient batch loading.
+- Uses Snowflake internal staging.
+- Loads data efficiently via `PUT` and `COPY INTO`.
 
 ### 🛠 Transformations
-- Cleans raw data to produce analytics-ready tables.
-- Normalizes multi-valued attributes (genres, countries) into bridge tables.
-- Aggregates metrics like title counts by year/type.
+- Cleans raw data into analytics-ready format.
+- Normalizes multi-valued fields (genres, countries) into bridge tables.
+- Builds aggregated KPIs such as titles by year and type.
 
 ### ✅ Data Quality Checks
-Automated tests verify:
-- Non-empty raw and clean tables
-- No null/duplicate primary identifiers
-- Valid domain values
-- Split tables have no blank entries
+Automated checks validate:
+- RAW and analytics tables are non-empty
+- Rowcount consistency between RAW and clean tables
+- No NULL or duplicate primary identifiers (`show_id`)
+- Valid domain values (`Movie` / `TV Show`)
+- Reasonable `release_year` values
+- No blank values in normalized bridge tables
+
+If all checks pass, the pipeline has executed successfully end-to-end.
+
+---
+
+## 📦 How to Run (Recruiter-Friendly Quickstart)
+
+### 0) Prerequisites
+- Python **3.10+**
+- A Snowflake account (free trial works)
+
+---
+
+### 1) Clone the repository
+Run this from a directory such as `~/Documents`:
+
+```bash
+git clone https://github.com/aayushkeshari/project-stream.git
+cd project-stream
+
+### 2) Create and activate a virtual environment
+
+python3 -m venv .venv
+source .venv/bin/activate
+(You should see (.venv) in your terminal prompt.)
+
+### 3) Install dependencies
+pip install -r requirements.txt
+
+Sanity check:
+python -c "from dotenv import load_dotenv; print('dotenv OK')"
+
+### 4) Configure Snowflake credentials
+
+Copy the template and fill in your credentials:
+
+cp .env.example .env
+
+Edit .env:
+
+SNOWFLAKE_ACCOUNT=<account_locator.region>   # e.g. mhc83493.us-east-1
+SNOWFLAKE_USER=<your_username>
+SNOWFLAKE_PASSWORD=<your_password>
+SNOWFLAKE_ROLE=ACCOUNTADMIN
+SNOWFLAKE_WAREHOUSE=DE_WH
+SNOWFLAKE_DATABASE=NETFLIX_DE
+
+### 5) One-time Snowflake setup (SQL)
+
+In the Snowflake Web UI → Worksheets, run:
+
+```sql
+CREATE WAREHOUSE IF NOT EXISTS DE_WH
+  WAREHOUSE_SIZE='XSMALL'
+  AUTO_SUSPEND=60
+  AUTO_RESUME=TRUE;
+
+CREATE DATABASE IF NOT EXISTS NETFLIX_DE;
+CREATE SCHEMA IF NOT EXISTS NETFLIX_DE.RAW;
+CREATE SCHEMA IF NOT EXISTS NETFLIX_DE.ANALYTICS;
+
+CREATE OR REPLACE FILE FORMAT NETFLIX_DE.RAW.CSV_FF
+  TYPE = CSV
+  FIELD_OPTIONALLY_ENCLOSED_BY = '"'
+  SKIP_HEADER = 1
+  NULL_IF = ('', 'NULL', 'null');
+
+CREATE OR REPLACE STAGE NETFLIX_DE.RAW.NETFLIX_STAGE
+  FILE_FORMAT = NETFLIX_DE.RAW.CSV_FF;
+
+### 6) Download the dataset
+
+python ingestion/download_dataset.py
+
+### 7) Run the pipeline (load + transforms)
+
+python ingestion/load_to_snowflake.py
+
+Expected output:
+
+RAW rowcount: 8807
+TITLES_CLEAN rowcount: 8807
+
+### 8) Run data quality checks
+python quality_checks/run_checks.py
+
+
+Expected ending:
+
+🎉 All data quality checks passed.
 
 ---
 
