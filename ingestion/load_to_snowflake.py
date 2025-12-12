@@ -29,7 +29,6 @@ def main():
 
             run_sql_file(cs, "sql/01_raw_table.sql")
 
-
             cs.execute(
                 f"PUT file://{local_path} @NETFLIX_DE.RAW.NETFLIX_STAGE "
                 "AUTO_COMPRESS=TRUE OVERWRITE=TRUE"
@@ -39,6 +38,12 @@ def main():
 
             cs.execute("SELECT COUNT(*) FROM RAW.NETFLIX_TITLES_RAW")
             print("RAW rowcount:", cs.fetchone()[0])
+
+            # Build analytics tables
+            run_sql_file(cs, "sql/03_analytics_tables.sql")
+            cs.execute("SELECT COUNT(*) FROM NETFLIX_DE.ANALYTICS.TITLES_CLEAN")
+            print("TITLES_CLEAN rowcount:", cs.fetchone()[0])
+
         finally:
             cs.close()
 
