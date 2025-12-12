@@ -67,7 +67,7 @@ If all checks pass, the pipeline has executed successfully end-to-end.
 
 ---
 
-## 📦 How to Run (Recruiter-Friendly Quickstart)
+## 📦 How to Run
 
 ### 0) Prerequisites
 - Python **3.10+**
